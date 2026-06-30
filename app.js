@@ -1,9 +1,9 @@
-// Live Cloud Database URL Endpoint mapped directly from your mockapi.io dashboard
+// Live Cloud Database URL Endpoint mapped directly from your mockapi.io screenshot
 const API_URL = "https://64a3f5ca6dba791499abab5b.mockapi.io/candidates";
 
 let data = [];
 
-/* LOGIN LOGIC */
+/* LOGIN SCREEN LOGIC */
 function login() {
     let u = document.getElementById("username").value;
     let p = document.getElementById("password").value;
@@ -22,7 +22,7 @@ function togglePassword() {
     }
 }
 
-/* INITIALIZATION: Pull baseline data from the cloud on dashboard load */
+/* INITIALIZATION */
 async function initDashboard() {
     await fetchOnlineData();
 }
@@ -31,12 +31,24 @@ async function initDashboard() {
 async function fetchOnlineData() {
     try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Cloud Database sync connection failed");
-        data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Server returned status: ${response.status}`);
+        }
+        
+        const rawData = await response.json();
+        
+        // Normalize uppercase and lowercase keys so they map perfectly to the UI template fields
+        data = rawData.map(item => ({
+            id: item.id,
+            name: item.Name || item.name || "Unknown Candidate",
+            skills: item.Skills || item.skills || "N/A",
+            score: Number(item.Score) || Number(item.score) || 0
+        }));
+
         render();
     } catch (error) {
         console.error("Error fetching online database:", error);
-        alert("⚠️ Failed to load cloud database data updates.");
+        alert("⚠️ Failed to load cloud database data updates. Make sure you are using Netlify or a local server.");
     }
 }
 
@@ -50,13 +62,16 @@ async function addCandidate() {
         return;
     }
 
-    // Dynamic AI Score calculation matrix generator
-    let score = Math.floor(Math.random() * 35 + 65);
+    let calculatedScore = Math.floor(Math.random() * 35 + 65);
 
+    // Provide both upper and lowercase keys to protect against any MockAPI structural schema variations
     const newCandidate = {
         name: nameEl.value.trim(),
+        Name: nameEl.value.trim(),
         skills: skillsEl.value.trim(),
-        score: score
+        Skills: skillsEl.value.trim(),
+        score: calculatedScore,
+        Score: calculatedScore
     };
 
     try {
@@ -69,9 +84,9 @@ async function addCandidate() {
         if (response.ok) {
             nameEl.value = "";
             skillsEl.value = "";
-            await fetchOnlineData(); // Force directory list refresh from core DB reference
+            await fetchOnlineData(); // Force directory list refresh from core cloud database reference
         } else {
-            throw new Error("Failed to post entry profile");
+            throw new Error("Failed to post candidate to cloud resource container.");
         }
     } catch (error) {
         console.error("Error writing to online database:", error);
@@ -91,9 +106,9 @@ async function deleteCandidate(id) {
         });
 
         if (response.ok) {
-            await fetchOnlineData(); // Re-fetch updated baseline dataset
+            await fetchOnlineData(); // Refresh list immediately from database reference
         } else {
-            throw new Error("Failed to delete requested item profile");
+            throw new Error("Failed to delete item from cloud server repository.");
         }
     } catch (error) {
         console.error("Error deleting from online database:", error);
@@ -101,7 +116,7 @@ async function deleteCandidate(id) {
     }
 }
 
-/* UI RENDERING & COMPONENT GENERATION */
+/* UI RENDERING ENGINE */
 function render() {
     let list = document.getElementById("list");
     if (!list) return;
@@ -142,7 +157,7 @@ function render() {
     if (totalEl) totalEl.innerText = data.length;
 
     if (avgEl) {
-        let avg = data.length ? Math.round(data.reduce((a, b) => a + (Number(b.score) || 0), 0) / data.length) : 0;
+        let avg = data.length ? Math.round(data.reduce((a, b) => a + b.score, 0) / data.length) : 0;
         avgEl.innerText = avg + "%";
     }
 
@@ -177,7 +192,7 @@ function schedule() {
     document.getElementById("date").value = "";
 }
 
-/* LOGOUT (Updated to point to index.html for Netlify default loading flow) */
+/* LOGOUT FLOW */
 function logout() {
     window.location.href = "index.html";
 }
