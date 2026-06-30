@@ -50,7 +50,7 @@ async function addCandidate() {
         return;
     }
 
-    // Dynamic AI Score matrix calculation generator
+    // Dynamic AI Score calculation matrix generator
     let score = Math.floor(Math.random() * 35 + 65);
 
     const newCandidate = {
@@ -128,7 +128,7 @@ function render() {
                 <div class="candidate-actions">
                     <span class="score-badge ${badgeClass}">${d.score}% AI Score</span>
                     <button onclick="quickSelect('${d.name.replace(/'/g, "\\'")}')" class="btn-action">📅 Schedule</button>
-                    <button onclick="deleteCandidate(${d.id})" class="btn-delete">🗑️</button>
+                    <button onclick="deleteCandidate('${d.id}')" class="btn-delete">🗑️</button>
                 </div>
             </div>`;
         });
@@ -177,6 +177,7 @@ function schedule() {
     document.getElementById("date").value = "";
 }
 
+/* LOGOUT (Updated to point to index.html for Netlify default loading flow) */
 function logout() {
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 }
