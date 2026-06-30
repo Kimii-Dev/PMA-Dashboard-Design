@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI HR Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="initDashboard()">
+
+    <header class="top-header">
+        <h2>AI HR Dashboard</h2>
+        <button onclick="logout()" class="btn-logout-top">Logout</button>
+    </header>
+
+    <div class="main-full">
+        
+        <section id="dashboard" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 style="margin: 0;">Dashboard Overview</h1>
+                <button onclick="initDashboard()" class="btn-sync">🔄 Refresh Cloud Data</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="card stat-card">
+                    <span class="icon">👥</span>
+                    <div>
+                        <h3>Total Candidates</h3>
+                        <h2 id="total">0</h2>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <span class="icon">🎯</span>
+                    <div>
+                        <h3>Avg AI Score</h3>
+                        <h2 id="avg">0%</h2>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <span class="icon">✨</span>
+                    <div>
+                        <h3>Shortlisted (&gt;80)</h3>
+                        <h2 id="shortlisted">0</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="dashboard-layout">
+            
+            <div class="left-col">
+                <section id="candidates" class="section">
+                    <div class="section-header">
+                        <h1>Candidate Directory</h1>
+                        <input type="text" id="search" oninput="render()" placeholder="🔍 Search name or skills...">
+                    </div>
+                    <div id="list" class="candidate-list">
+                        </div>
+                </section>
+            </div>
+
+            <div class="right-col">
+                <section id="add-section" class="section">
+                    <h1>Add Candidate</h1>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="skills">Skills / Keywords</label>
+                        <input type="text" id="skills" placeholder="Python, NLP, React">
+                    </div>
+                    <button class="btn-primary" onclick="addCandidate()">Add Candidate Profile</button>
+                </section>
+
+                <section id="schedule-section" class="section">
+                    <h1>Interview Scheduler</h1>
+                    <div class="form-group">
+                        <label for="sname">Candidate Name</label>
+                        <input type="text" id="sname" placeholder="Select candidate or type name">
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Interview Date</label>
+                        <input type="date" id="date">
+                    </div>
+                    <button class="btn-secondary" onclick="schedule()">Confirm Schedule</button>
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
