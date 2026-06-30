@@ -1,5 +1,5 @@
-// Live Cloud Database URL Endpoint mapped directly from your mockapi.io screenshot
-const API_URL = "https://64a3f5ca6dba791499abab5b.mockapi.io/candidates";
+// Live Cloud Database URL Endpoint - 100% Corrected from your link text
+const API_URL = "https://6a43f5ca6dba791499abab5b.mockapi.io/candidates";
 
 let data = [];
 
@@ -37,7 +37,7 @@ async function fetchOnlineData() {
         
         const rawData = await response.json();
         
-        // Normalize uppercase and lowercase keys so they map perfectly to the UI template fields
+        // Normalize uppercase and lowercase keys so they map perfectly to the UI layout
         data = rawData.map(item => ({
             id: item.id,
             name: item.Name || item.name || "Unknown Candidate",
@@ -64,7 +64,7 @@ async function addCandidate() {
 
     let calculatedScore = Math.floor(Math.random() * 35 + 65);
 
-    // Provide both upper and lowercase keys to protect against any MockAPI structural schema variations
+    // Map keys to match your database properties perfectly
     const newCandidate = {
         name: nameEl.value.trim(),
         Name: nameEl.value.trim(),
@@ -84,7 +84,7 @@ async function addCandidate() {
         if (response.ok) {
             nameEl.value = "";
             skillsEl.value = "";
-            await fetchOnlineData(); // Force directory list refresh from core cloud database reference
+            await fetchOnlineData(); // Refresh list directly from the database
         } else {
             throw new Error("Failed to post candidate to cloud resource container.");
         }
@@ -106,7 +106,7 @@ async function deleteCandidate(id) {
         });
 
         if (response.ok) {
-            await fetchOnlineData(); // Refresh list immediately from database reference
+            await fetchOnlineData(); // Refresh dashboard list instantly
         } else {
             throw new Error("Failed to delete item from cloud server repository.");
         }
