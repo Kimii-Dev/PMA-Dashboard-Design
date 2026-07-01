@@ -1,198 +1,147 @@
-// Live Cloud Database URL Endpoint - 100% Corrected from your link text
-const API_URL = "https://6a43f5ca6dba791499abab5b.mockapi.io/candidates";
+// --- 1. Login Handling ---
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        window.location.href = 'main.html';
+    });
+}
 
-let data = [];
-
-/* LOGIN SCREEN LOGIC */
-function login() {
-    let u = document.getElementById("username").value;
-    let p = document.getElementById("password").value;
-
-    if (u === "admin" && p === "1234") {
-        window.location.href = "main.html";
-    } else {
-        document.getElementById("msg").innerText = "Wrong credentials";
+// --- 2. Candidate Data Generation ---
+const candidates = [
+    { 
+        name: 'Laila', role: 'Lead AI Engineer', score: 98.5, 
+        skills: ['Python', 'TensorFlow', 'PyTorch', 'System Architecture'],
+        context: 'High relevance. Experience leading teams matches Aerodyne project demands.',
+        retention: 92
+    },
+    { 
+        name: 'Faris', role: 'Drone Data Scientist', score: 96.2, 
+        skills: ['Data Analytics', 'Computer Vision', 'R', 'Tableau'],
+        context: 'Strong technical background in visual data processing. Perfect fit for drone analytics.',
+        retention: 88
+    },
+    { 
+        name: 'Naeim', role: 'Computer Vision Specialist', score: 93.8, 
+        skills: ['OpenCV', 'C++', 'Neural Networks', 'Object Detection'],
+        context: 'Directly maps to AI inspection roles. Validated specialized certifications.',
+        retention: 85
+    },
+    { 
+        name: 'Adna', role: 'UI/UX Designer', score: 91.0, 
+        skills: ['Figma', 'User Research', 'Wireframing', 'Prototyping'],
+        context: 'Excellent portfolio matching Aerodyne dashboard requirements.',
+        retention: 94
+    },
+    { 
+        name: 'Mun', role: 'Cybersecurity Analyst', score: 89.4, 
+        skills: ['Network Security', 'Penetration Testing', 'Cloud Security'],
+        context: 'Solid background, required certifications present (CompTIA, CEH).',
+        retention: 81
     }
+];
+
+const candidateTable = document.querySelector('#candidateTable tbody');
+
+if (candidateTable) {
+    // Populate Table
+    candidates.forEach((cand, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${cand.name}</strong></td>
+            <td>${cand.role}</td>
+            <td><span class="score-badge">${cand.score}%</span></td>
+            <td><button class="btn-explain" data-index="${index}">Explain AI Score</button></td>
+            <td><button class="btn-outline schedule-btn">Schedule Interview</button></td>
+        `;
+        candidateTable.appendChild(row);
+    });
+
+    // Handle "Schedule Interview" Toggle
+    document.querySelectorAll('.schedule-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (this.classList.contains('btn-invited')) {
+                this.classList.remove('btn-invited');
+                this.innerText = 'Schedule Interview';
+            } else {
+                this.classList.add('btn-invited');
+                this.innerText = '✓ Invited';
+            }
+        });
+    });
+
+    // Handle "Explain AI Score" Modal
+    const xaiModal = document.getElementById('xaiModal');
+    const closeXaiBtn = document.getElementById('closeXaiBtn');
+
+    document.querySelectorAll('.btn-explain').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const cand = candidates[this.getAttribute('data-index')];
+            
+            document.getElementById('xaiName').innerText = `${cand.name}'s Analysis`;
+            document.getElementById('xaiScore').innerText = `${cand.score}%`;
+            
+            // Populate Tags
+            const tagsHtml = cand.skills.map(skill => `<span class="tag">${skill}</span>`).join('');
+            document.getElementById('xaiSkills').innerHTML = tagsHtml;
+            
+            // Populate Context & Retention
+            document.getElementById('xaiContext').innerText = cand.context;
+            
+            const retentionBar = document.getElementById('xaiRetention');
+            retentionBar.style.width = '0%'; // Reset for animation
+            setTimeout(() => { retentionBar.style.width = `${cand.retention}%`; }, 50);
+            
+            document.getElementById('xaiRetentionText').innerText = `${cand.retention}% predicted 2-year retention probability.`;
+            
+            xaiModal.classList.remove('hidden');
+        });
+    });
+
+    closeXaiBtn.addEventListener('click', () => xaiModal.classList.add('hidden'));
 }
 
-function togglePassword() {
-    let p = document.getElementById("password");
-    if (p) {
-        p.type = p.type === "password" ? "text" : "password";
-    }
-}
+// --- 3. Upload Simulation Logic ---
+const uploadBtn = document.getElementById('uploadBtn');
+const uploadModal = document.getElementById('uploadModal');
+const processTitle = document.getElementById('processTitle');
+const processStatus = document.getElementById('processStatus');
 
-/* INITIALIZATION */
-async function initDashboard() {
-    await fetchOnlineData();
-}
-
-/* 1. READ: Fetch candidates from your online cloud database */
-async function fetchOnlineData() {
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-            throw new Error(`Server returned status: ${response.status}`);
-        }
+if (uploadBtn) {
+    uploadBtn.addEventListener('click', () => {
+        uploadModal.classList.remove('hidden');
         
-        const rawData = await response.json();
-        
-        // Normalize uppercase and lowercase keys so they map perfectly to the UI layout
-        data = rawData.map(item => ({
-            id: item.id,
-            name: item.Name || item.name || "Unknown Candidate",
-            skills: item.Skills || item.skills || "N/A",
-            score: Number(item.Score) || Number(item.score) || 0
-        }));
+        // Sequence phases
+        setTimeout(() => {
+            processTitle.innerText = "Processing Data...";
+            processStatus.innerText = "NLP Extracting Skills & Entities...";
+        }, 1000);
 
-        render();
-    } catch (error) {
-        console.error("Error fetching online database:", error);
-        alert("⚠️ Failed to load cloud database data updates. Make sure you are using Netlify or a local server.");
-    }
+        setTimeout(() => {
+            processStatus.innerText = "LSTM Contextual Analysis in progress...";
+        }, 2500);
+
+        setTimeout(() => {
+            processTitle.innerText = "Finalizing...";
+            processStatus.innerText = "ML Candidate Ranking & Scoring...";
+        }, 4000);
+
+        setTimeout(() => {
+            uploadModal.classList.add('hidden');
+            // Reset for next click
+            setTimeout(() => {
+                processTitle.innerText = "Initializing Processing...";
+                processStatus.innerText = "Connecting to Aerodyne Cloud...";
+            }, 500);
+        }, 5500);
+    });
 }
 
-/* 2. CREATE: Add candidate directly to the cloud database */
-async function addCandidate() {
-    let nameEl = document.getElementById("name");
-    let skillsEl = document.getElementById("skills");
-
-    if (!nameEl.value.trim() || !skillsEl.value.trim()) {
-        alert("Please fill in both the Name and Skills fields.");
-        return;
-    }
-
-    let calculatedScore = Math.floor(Math.random() * 35 + 65);
-
-    // Map keys to match your database properties perfectly
-    const newCandidate = {
-        name: nameEl.value.trim(),
-        Name: nameEl.value.trim(),
-        skills: skillsEl.value.trim(),
-        Skills: skillsEl.value.trim(),
-        score: calculatedScore,
-        Score: calculatedScore
-    };
-
-    try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newCandidate)
-        });
-
-        if (response.ok) {
-            nameEl.value = "";
-            skillsEl.value = "";
-            await fetchOnlineData(); // Refresh list directly from the database
-        } else {
-            throw new Error("Failed to post candidate to cloud resource container.");
-        }
-    } catch (error) {
-        console.error("Error writing to online database:", error);
-        alert("⚠️ Cloud database update failed.");
-    }
-}
-
-/* 3. DELETE: Remove candidate permanently from the cloud database */
-async function deleteCandidate(id) {
-    if (!confirm("Are you sure you want to permanently delete this candidate from the online database?")) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "DELETE"
-        });
-
-        if (response.ok) {
-            await fetchOnlineData(); // Refresh dashboard list instantly
-        } else {
-            throw new Error("Failed to delete item from cloud server repository.");
-        }
-    } catch (error) {
-        console.error("Error deleting from online database:", error);
-        alert("⚠️ Cloud database record deletion failed.");
-    }
-}
-
-/* UI RENDERING ENGINE */
-function render() {
-    let list = document.getElementById("list");
-    if (!list) return;
-
-    let search = document.getElementById("search")?.value || "";
-    list.innerHTML = "";
-
-    let filtered = data.filter(d =>
-        (d.name && d.name.toLowerCase().includes(search.toLowerCase())) || 
-        (d.skills && d.skills.toLowerCase().includes(search.toLowerCase()))
-    );
-
-    if (filtered.length === 0) {
-        list.innerHTML = `<div class="empty-state">No matching candidates found in the cloud database.</div>`;
-    } else {
-        filtered.forEach(d => {
-            let badgeClass = d.score >= 80 ? 'badge-high' : 'badge-mid';
-            list.innerHTML += `
-            <div class="candidate-card">
-                <div class="candidate-info">
-                    <h4>${d.name}</h4>
-                    <p class="skills-tag"><strong>Skills:</strong> ${d.skills}</p>
-                </div>
-                <div class="candidate-actions">
-                    <span class="score-badge ${badgeClass}">${d.score}% AI Score</span>
-                    <button onclick="quickSelect('${d.name.replace(/'/g, "\\'")}')" class="btn-action">📅 Schedule</button>
-                    <button onclick="deleteCandidate('${d.id}')" class="btn-delete">🗑️</button>
-                </div>
-            </div>`;
-        });
-    }
-
-    // Dynamic Live Status Counters
-    const totalEl = document.getElementById("total");
-    const avgEl = document.getElementById("avg");
-    const shortlistedEl = document.getElementById("shortlisted");
-
-    if (totalEl) totalEl.innerText = data.length;
-
-    if (avgEl) {
-        let avg = data.length ? Math.round(data.reduce((a, b) => a + b.score, 0) / data.length) : 0;
-        avgEl.innerText = avg + "%";
-    }
-
-    if (shortlistedEl) {
-        let short = data.filter(d => d.score >= 80).length;
-        shortlistedEl.innerText = short;
-    }
-}
-
-/* POPULATE INTERVIEW SCHEDULER MATRIX */
-function quickSelect(name) {
-    let snameEl = document.getElementById("sname");
-    if (snameEl) {
-        snameEl.value = name;
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        document.getElementById("date")?.focus();
-    }
-}
-
-/* RUN INTERVIEW SCHEDULE */
-function schedule() {
-    let candidateName = document.getElementById("sname").value;
-    let interviewDate = document.getElementById("date").value;
-
-    if (!candidateName || !interviewDate) {
-        alert("Please pick a candidate and a valid date.");
-        return;
-    }
-
-    alert(`📅 Interview confirmed for ${candidateName} on ${interviewDate}!`);
-    document.getElementById("sname").value = "";
-    document.getElementById("date").value = "";
-}
-
-/* LOGOUT FLOW */
-function logout() {
-    window.location.href = "index.html";
+// --- 4. Logout ---
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'index.html';
+    });
 }

@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Recruitment Login</title>
+    <title>Aerodyne - AI Talent Acquisition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-body">
-
-    <div class="login-card">
-        <h1>AI Recruitment System</h1>
-        <p style="margin-bottom: 20px; color: #94a3b8; font-size: 14px;">Smart HR Dashboard</p>
-
-        <div class="form-group" style="text-align: left;">
-            <input type="text" id="username" placeholder="Username">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="brand">
+                <div class="brand-logo">AERODYNE</div>
+                <p>AI Talent Acquisition System</p>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Corporate ID / Email</label>
+                    <input type="text" id="username" placeholder="Enter your credentials" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Secure Login</button>
+            </form>
         </div>
-
-        <div class="form-group password-box" style="text-align: left;">
-            <input type="password" id="password" placeholder="Password">
-            <span onclick="togglePassword()">👁</span>
-        </div>
-
-        <button class="btn-primary" onclick="login()" style="margin-top: 10px;">Login</button>
-
-        <p id="msg"></p>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>

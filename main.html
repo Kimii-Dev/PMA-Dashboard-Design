@@ -3,90 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI HR Dashboard</title>
+    <title>HR Dashboard - Aerodyne AI</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body onload="initDashboard()">
+<body>
+    <nav class="navbar">
+        <div class="logo">AERODYNE <span>AI-TM</span></div>
+        <div class="nav-links">
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Candidate Pool</a>
+            <a href="#">Interviews</a>
+            <a href="#" id="logoutBtn" class="logout">Logout</a>
+        </div>
+    </nav>
 
-    <header class="top-header">
-        <h2>AI HR Dashboard</h2>
-        <button onclick="logout()" class="btn-logout-top">Logout</button>
-    </header>
+    <main class="dashboard">
+        <header class="dashboard-header">
+            <div>
+                <h1>Recruitment Overview</h1>
+                <p>Real-time applicant tracking and AI screening metrics.</p>
+            </div>
+            <button class="btn-action" id="uploadBtn">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
+                Upload Resumes
+            </button>
+        </header>
 
-    <div class="main-full">
-        
-        <section id="dashboard" class="section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h1 style="margin: 0;">Dashboard Overview</h1>
-                <button onclick="initDashboard()" class="btn-sync">🔄 Refresh Cloud Data</button>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total Applicants</h3>
+                <p class="number">3,245</p>
             </div>
-            
-            <div class="stats-grid">
-                <div class="card stat-card">
-                    <span class="icon">👥</span>
-                    <div>
-                        <h3>Total Candidates</h3>
-                        <h2 id="total">0</h2>
-                    </div>
-                </div>
-                <div class="card stat-card">
-                    <span class="icon">🎯</span>
-                    <div>
-                        <h3>Avg AI Score</h3>
-                        <h2 id="avg">0%</h2>
-                    </div>
-                </div>
-                <div class="card stat-card">
-                    <span class="icon">✨</span>
-                    <div>
-                        <h3>Shortlisted (&gt;80)</h3>
-                        <h2 id="shortlisted">0</h2>
-                    </div>
-                </div>
+            <div class="metric-card">
+                <h3>AI Screened</h3>
+                <p class="number">3,180</p>
             </div>
+            <div class="metric-card highlight-card">
+                <h3>System Shortlisted</h3>
+                <p class="number">142</p>
+            </div>
+        </div>
+
+        <section class="candidate-list">
+            <h2>Top AI Recommended Candidates</h2>
+            <table id="candidateTable">
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Applied Role</th>
+                        <th>NLP Match Score</th>
+                        <th>Explainability</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
         </section>
+    </main>
 
-        <div class="dashboard-layout">
-            
-            <div class="left-col">
-                <section id="candidates" class="section">
-                    <div class="section-header">
-                        <h1>Candidate Directory</h1>
-                        <input type="text" id="search" oninput="render()" placeholder="🔍 Search name or skills...">
-                    </div>
-                    <div id="list" class="candidate-list">
-                        </div>
-                </section>
+    <div id="uploadModal" class="modal hidden">
+        <div class="modal-content text-center">
+            <h2 id="processTitle">Initializing Processing...</h2>
+            <div class="loader"></div>
+            <p id="processStatus" class="status-text">Connecting to Aerodyne Cloud...</p>
+        </div>
+    </div>
+
+    <div id="xaiModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="xaiName">Candidate Analysis</h2>
+                <button class="close-btn" id="closeXaiBtn">&times;</button>
             </div>
-
-            <div class="right-col">
-                <section id="add-section" class="section">
-                    <h1>Add Candidate</h1>
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" placeholder="John Doe">
+            <div class="xai-body">
+                <div class="score-display">
+                    <h1 id="xaiScore">98.5%</h1>
+                    <p>Overall Fit Score</p>
+                </div>
+                <div class="xai-details">
+                    <h3>Technical Skills Matched (NLP)</h3>
+                    <div id="xaiSkills" class="tags-container"></div>
+                    
+                    <h3 style="margin-top: 20px;">Contextual Analysis (LSTM/GRU)</h3>
+                    <p id="xaiContext" class="context-text"></p>
+                    
+                    <h3 style="margin-top: 20px;">Predictive Retention</h3>
+                    <div class="progress-bar-bg">
+                        <div id="xaiRetention" class="progress-bar-fill"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="skills">Skills / Keywords</label>
-                        <input type="text" id="skills" placeholder="Python, NLP, React">
-                    </div>
-                    <button class="btn-primary" onclick="addCandidate()">Add Candidate Profile</button>
-                </section>
-
-                <section id="schedule-section" class="section">
-                    <h1>Interview Scheduler</h1>
-                    <div class="form-group">
-                        <label for="sname">Candidate Name</label>
-                        <input type="text" id="sname" placeholder="Select candidate or type name">
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Interview Date</label>
-                        <input type="date" id="date">
-                    </div>
-                    <button class="btn-secondary" onclick="schedule()">Confirm Schedule</button>
-                </section>
+                    <p id="xaiRetentionText" class="retention-text"></p>
+                </div>
             </div>
-
         </div>
     </div>
 
