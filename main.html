@@ -4,99 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HR Dashboard - Aerodyne AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="logo">AERODYNE <span>AI-TM</span></div>
-        <div class="nav-links">
-            <a href="#" class="active">Dashboard</a>
-            <a href="#">Candidate Pool</a>
-            <a href="#">Interviews</a>
-            <a href="#" id="logoutBtn" class="logout">Logout</a>
+<body class="dashboard-body">
+    
+    <aside class="sidebar">
+        <div class="logo">AERODYNE <span>AI</span></div>
+        <nav class="nav-menu">
+            <a href="#" class="active"><i class="icon">📊</i> Dashboard</a>
+            <a href="#"><i class="icon">👥</i> Candidate Pool</a>
+            <a href="#"><i class="icon">📅</i> Interviews</a>
+            <a href="#"><i class="icon">📈</i> Analytics</a>
+        </nav>
+        <div class="bottom-nav">
+            <a href="#" id="logoutBtn" class="logout"><i class="icon">🚪</i> Secure Logout</a>
         </div>
-    </nav>
+    </aside>
 
-    <main class="dashboard">
-        <header class="dashboard-header">
-            <div>
-                <h1>Recruitment Overview</h1>
-                <p>Real-time applicant tracking and AI screening metrics.</p>
+    <main class="main-content">
+        <header class="top-header fade-in">
+            <div class="header-titles">
+                <h1>Recruitment Intelligence</h1>
+                <p>Live applicant tracking and predictive AI scoring.</p>
             </div>
-            <button class="btn-action" id="uploadBtn">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
-                Upload Resumes
+            <button class="btn-primary pulse-btn" id="uploadBtn">
+                + Upload Resumes
             </button>
         </header>
 
-        <div class="metrics-grid">
+        <div class="metrics-grid slide-up">
             <div class="metric-card">
-                <h3>Total Applicants</h3>
-                <p class="number">3,245</p>
+                <div class="metric-icon blue-icon">📥</div>
+                <div>
+                    <h3>Total Applicants</h3>
+                    <p class="number">3,245</p>
+                </div>
             </div>
             <div class="metric-card">
-                <h3>AI Screened</h3>
-                <p class="number">3,180</p>
+                <div class="metric-icon purple-icon">🧠</div>
+                <div>
+                    <h3>AI Screened</h3>
+                    <p class="number">3,180</p>
+                </div>
             </div>
             <div class="metric-card highlight-card">
-                <h3>System Shortlisted</h3>
-                <p class="number">142</p>
+                <div class="metric-icon green-icon">⭐</div>
+                <div>
+                    <h3>System Shortlisted</h3>
+                    <p class="number">142</p>
+                </div>
             </div>
         </div>
 
-        <section class="candidate-list">
-            <h2>Top AI Recommended Candidates</h2>
-            <table id="candidateTable">
-                <thead>
-                    <tr>
-                        <th>Candidate Name</th>
-                        <th>Applied Role</th>
-                        <th>NLP Match Score</th>
-                        <th>Explainability</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
+        <section class="candidate-section slide-up delay-1">
+            <div class="section-header">
+                <h2>Top Recommended Candidates</h2>
+                <span class="badge">Live Updating</span>
+            </div>
+            <div class="table-container">
+                <table id="candidateTable">
+                    <thead>
+                        <tr>
+                            <th>Candidate Profile</th>
+                            <th>Applied Role</th>
+                            <th>Match Score</th>
+                            <th>AI XAI</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
-    <div id="uploadModal" class="modal hidden">
-        <div class="modal-content text-center">
-            <h2 id="processTitle">Initializing Processing...</h2>
-            <div class="loader"></div>
-            <p id="processStatus" class="status-text">Connecting to Aerodyne Cloud...</p>
-        </div>
-    </div>
-
     <div id="xaiModal" class="modal hidden">
-        <div class="modal-content">
+        <div class="modal-content glass-effect">
             <div class="modal-header">
-                <h2 id="xaiName">Candidate Analysis</h2>
+                <h2 id="xaiName">Analysis</h2>
                 <button class="close-btn" id="closeXaiBtn">&times;</button>
             </div>
             <div class="xai-body">
-                <div class="score-display">
-                    <h1 id="xaiScore">98.5%</h1>
-                    <p>Overall Fit Score</p>
+                <div class="score-circle">
+                    <svg viewBox="0 0 36 36" class="circular-chart blue">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="circle" id="xaiSvgScore" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <text x="18" y="20.35" class="percentage" id="xaiScoreText">0%</text>
+                    </svg>
                 </div>
+                
                 <div class="xai-details">
-                    <h3>Technical Skills Matched (NLP)</h3>
+                    <h3>Verified Skills (NLP)</h3>
                     <div id="xaiSkills" class="tags-container"></div>
                     
-                    <h3 style="margin-top: 20px;">Contextual Analysis (LSTM/GRU)</h3>
+                    <h3 class="mt-4">Contextual Fit (LSTM)</h3>
                     <p id="xaiContext" class="context-text"></p>
                     
-                    <h3 style="margin-top: 20px;">Predictive Retention</h3>
-                    <div class="progress-bar-bg">
-                        <div id="xaiRetention" class="progress-bar-fill"></div>
+                    <h3 class="mt-4">2-Year Retention Prediction</h3>
+                    <div class="progress-container">
+                        <div id="xaiRetention" class="progress-bar"></div>
                     </div>
-                    <p id="xaiRetentionText" class="retention-text"></p>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="toast" class="toast hidden">Action Successful</div>
 
     <script src="app.js"></script>
 </body>

@@ -1,143 +1,122 @@
-// --- 1. Login Handling ---
+// --- Global Toast Notification ---
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    if(toast) {
+        toast.innerText = message;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+}
+
+// --- Login Handling ---
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        window.location.href = 'main.html';
+        const btn = loginForm.querySelector('.btn-primary');
+        btn.innerHTML = 'Authenticating...';
+        btn.style.opacity = '0.8';
+        setTimeout(() => { window.location.href = 'main.html'; }, 800);
     });
 }
 
-// --- 2. Candidate Data Generation ---
+// --- Dashboard Data & Interaction ---
 const candidates = [
-    { 
-        name: 'Laila', role: 'Lead AI Engineer', score: 98.5, 
-        skills: ['Python', 'TensorFlow', 'PyTorch', 'System Architecture'],
-        context: 'High relevance. Experience leading teams matches Aerodyne project demands.',
-        retention: 92
-    },
-    { 
-        name: 'Faris', role: 'Drone Data Scientist', score: 96.2, 
-        skills: ['Data Analytics', 'Computer Vision', 'R', 'Tableau'],
-        context: 'Strong technical background in visual data processing. Perfect fit for drone analytics.',
-        retention: 88
-    },
-    { 
-        name: 'Naeim', role: 'Computer Vision Specialist', score: 93.8, 
-        skills: ['OpenCV', 'C++', 'Neural Networks', 'Object Detection'],
-        context: 'Directly maps to AI inspection roles. Validated specialized certifications.',
-        retention: 85
-    },
-    { 
-        name: 'Adna', role: 'UI/UX Designer', score: 91.0, 
-        skills: ['Figma', 'User Research', 'Wireframing', 'Prototyping'],
-        context: 'Excellent portfolio matching Aerodyne dashboard requirements.',
-        retention: 94
-    },
-    { 
-        name: 'Mun', role: 'Cybersecurity Analyst', score: 89.4, 
-        skills: ['Network Security', 'Penetration Testing', 'Cloud Security'],
-        context: 'Solid background, required certifications present (CompTIA, CEH).',
-        retention: 81
-    }
+    { name: 'Laila', role: 'Lead AI Engineer', score: 98.5, skills: ['Python', 'TensorFlow', 'PyTorch', 'System Arch'], context: 'High relevance. Experience leading teams matches Aerodyne project demands perfectly.', retention: 92 },
+    { name: 'Faris', role: 'Drone Data Scientist', score: 96.2, skills: ['Data Analytics', 'Computer Vision', 'R', 'Tableau'], context: 'Strong technical background in visual data processing. Perfect fit for drone analytics.', retention: 88 },
+    { name: 'Naeim', role: 'CV Specialist', score: 93.8, skills: ['OpenCV', 'C++', 'Neural Networks', 'YOLOv8'], context: 'Directly maps to AI inspection roles. Validated specialized drone certifications.', retention: 85 },
+    { name: 'Adna', role: 'UI/UX Designer', score: 91.0, skills: ['Figma', 'User Research', 'Prototyping'], context: 'Excellent portfolio matching Aerodyne enterprise dashboard requirements.', retention: 94 },
+    { name: 'Mun', role: 'Cybersecurity Analyst', score: 89.4, skills: ['Network Sec', 'Pen Testing', 'Cloud Sec'], context: 'Solid background, required certifications present (CompTIA, CEH).', retention: 81 }
 ];
 
 const candidateTable = document.querySelector('#candidateTable tbody');
 
 if (candidateTable) {
-    // Populate Table
+    // Render Table
     candidates.forEach((cand, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td><strong>${cand.name}</strong></td>
+            <td>
+                <span class="cand-name">${cand.name}</span>
+            </td>
             <td>${cand.role}</td>
-            <td><span class="score-badge">${cand.score}%</span></td>
-            <td><button class="btn-explain" data-index="${index}">Explain AI Score</button></td>
-            <td><button class="btn-outline schedule-btn">Schedule Interview</button></td>
+            <td><span class="score-pill">${cand.score}% Match</span></td>
+            <td><button class="btn-xai" data-index="${index}">View Logic</button></td>
+            <td><button class="btn-action schedule-btn">Schedule</button></td>
         `;
         candidateTable.appendChild(row);
     });
 
-    // Handle "Schedule Interview" Toggle
+    // Schedule Buttons Toggle
     document.querySelectorAll('.schedule-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            if (this.classList.contains('btn-invited')) {
-                this.classList.remove('btn-invited');
-                this.innerText = 'Schedule Interview';
+            if (this.classList.contains('invited')) {
+                this.classList.remove('invited');
+                this.innerText = 'Schedule';
+                showToast("Interview cancelled.");
             } else {
-                this.classList.add('btn-invited');
+                this.classList.add('invited');
                 this.innerText = '✓ Invited';
+                showToast("Automated calendar invite sent!");
             }
         });
     });
 
-    // Handle "Explain AI Score" Modal
+    // XAI Modal Logic
     const xaiModal = document.getElementById('xaiModal');
     const closeXaiBtn = document.getElementById('closeXaiBtn');
-
-    document.querySelectorAll('.btn-explain').forEach(btn => {
+    
+    document.querySelectorAll('.btn-xai').forEach(btn => {
         btn.addEventListener('click', function() {
             const cand = candidates[this.getAttribute('data-index')];
             
-            document.getElementById('xaiName').innerText = `${cand.name}'s Analysis`;
-            document.getElementById('xaiScore').innerText = `${cand.score}%`;
+            document.getElementById('xaiName').innerText = `AI Analysis: ${cand.name}`;
+            document.getElementById('xaiScoreText').innerText = `${cand.score}%`;
             
+            // Animate SVG Circle
+            setTimeout(() => {
+                document.getElementById('xaiSvgScore').setAttribute('stroke-dasharray', `${cand.score}, 100`);
+            }, 100);
+
             // Populate Tags
-            const tagsHtml = cand.skills.map(skill => `<span class="tag">${skill}</span>`).join('');
-            document.getElementById('xaiSkills').innerHTML = tagsHtml;
+            document.getElementById('xaiSkills').innerHTML = cand.skills.map(skill => `<span class="tag">${skill}</span>`).join('');
             
-            // Populate Context & Retention
+            // Populate Context
             document.getElementById('xaiContext').innerText = cand.context;
             
+            // Animate Retention Bar
             const retentionBar = document.getElementById('xaiRetention');
-            retentionBar.style.width = '0%'; // Reset for animation
-            setTimeout(() => { retentionBar.style.width = `${cand.retention}%`; }, 50);
-            
-            document.getElementById('xaiRetentionText').innerText = `${cand.retention}% predicted 2-year retention probability.`;
+            retentionBar.style.width = '0%'; 
+            setTimeout(() => { retentionBar.style.width = `${cand.retention}%`; }, 300);
             
             xaiModal.classList.remove('hidden');
         });
     });
 
-    closeXaiBtn.addEventListener('click', () => xaiModal.classList.add('hidden'));
-}
-
-// --- 3. Upload Simulation Logic ---
-const uploadBtn = document.getElementById('uploadBtn');
-const uploadModal = document.getElementById('uploadModal');
-const processTitle = document.getElementById('processTitle');
-const processStatus = document.getElementById('processStatus');
-
-if (uploadBtn) {
-    uploadBtn.addEventListener('click', () => {
-        uploadModal.classList.remove('hidden');
-        
-        // Sequence phases
-        setTimeout(() => {
-            processTitle.innerText = "Processing Data...";
-            processStatus.innerText = "NLP Extracting Skills & Entities...";
-        }, 1000);
-
-        setTimeout(() => {
-            processStatus.innerText = "LSTM Contextual Analysis in progress...";
-        }, 2500);
-
-        setTimeout(() => {
-            processTitle.innerText = "Finalizing...";
-            processStatus.innerText = "ML Candidate Ranking & Scoring...";
-        }, 4000);
-
-        setTimeout(() => {
-            uploadModal.classList.add('hidden');
-            // Reset for next click
-            setTimeout(() => {
-                processTitle.innerText = "Initializing Processing...";
-                processStatus.innerText = "Connecting to Aerodyne Cloud...";
-            }, 500);
-        }, 5500);
+    closeXaiBtn.addEventListener('click', () => {
+        xaiModal.classList.add('hidden');
+        document.getElementById('xaiSvgScore').setAttribute('stroke-dasharray', `0, 100`); // Reset circle
     });
 }
 
-// --- 4. Logout ---
+// --- Upload Simulation ---
+const uploadBtn = document.getElementById('uploadBtn');
+if (uploadBtn) {
+    uploadBtn.addEventListener('click', () => {
+        uploadBtn.innerText = 'Processing...';
+        uploadBtn.style.opacity = '0.7';
+        
+        setTimeout(() => { showToast("NLP Extracting Resumes..."); }, 500);
+        setTimeout(() => { showToast("LSTM Analyzing Context..."); }, 2000);
+        setTimeout(() => { 
+            showToast("Success: Database Updated!");
+            uploadBtn.innerHTML = '+ Upload Resumes';
+            uploadBtn.style.opacity = '1';
+        }, 3500);
+    });
+}
+
+// --- Logout ---
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', (e) => {
