@@ -12,10 +12,10 @@
     <aside class="sidebar">
         <div class="logo">AERODYNE <span>AI</span></div>
         <nav class="nav-menu">
-            <a href="#" class="active"><i class="icon">📊</i> Dashboard</a>
-            <a href="#"><i class="icon">👥</i> Candidate Pool</a>
-            <a href="#"><i class="icon">📅</i> Interviews</a>
-            <a href="#"><i class="icon">📈</i> Analytics</a>
+            <a href="#" class="active" data-target="view-dashboard"><i class="icon">📊</i> Dashboard</a>
+            <a href="#" data-target="view-candidates"><i class="icon">👥</i> Candidate Pool</a>
+            <a href="#" data-target="view-interviews"><i class="icon">📅</i> Interviews</a>
+            <a href="#" data-target="view-analytics"><i class="icon">📈</i> Analytics</a>
         </nav>
         <div class="bottom-nav">
             <a href="#" id="logoutBtn" class="logout"><i class="icon">🚪</i> Secure Logout</a>
@@ -23,61 +23,178 @@
     </aside>
 
     <main class="main-content">
-        <header class="top-header fade-in">
-            <div class="header-titles">
-                <h1>Recruitment Intelligence</h1>
-                <p>Live applicant tracking and predictive AI scoring.</p>
-            </div>
-            <button class="btn-primary pulse-btn" id="uploadBtn">
-                + Upload Resumes
-            </button>
-        </header>
+        
+        <div id="view-dashboard" class="view-section active fade-in">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Recruitment Intelligence</h1>
+                    <p>Live applicant tracking and predictive AI scoring.</p>
+                </div>
+                <button class="btn-primary pulse-btn" id="uploadBtn">
+                    + Upload Resumes
+                </button>
+            </header>
 
-        <div class="metrics-grid slide-up">
-            <div class="metric-card">
-                <div class="metric-icon blue-icon">📥</div>
-                <div>
-                    <h3>Total Applicants</h3>
-                    <p class="number">3,245</p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue-icon">📥</div>
+                    <div>
+                        <h3>Total Applicants</h3>
+                        <p class="number">3,245</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon purple-icon">🧠</div>
+                    <div>
+                        <h3>AI Screened</h3>
+                        <p class="number">3,180</p>
+                    </div>
+                </div>
+                <div class="metric-card highlight-card">
+                    <div class="metric-icon green-icon">⭐</div>
+                    <div>
+                        <h3>System Shortlisted</h3>
+                        <p class="number">142</p>
+                    </div>
                 </div>
             </div>
-            <div class="metric-card">
-                <div class="metric-icon purple-icon">🧠</div>
-                <div>
-                    <h3>AI Screened</h3>
-                    <p class="number">3,180</p>
+
+            <section class="candidate-section">
+                <div class="section-header">
+                    <h2>Top Recommended Candidates</h2>
+                    <span class="badge">Live Updating</span>
                 </div>
+                <div class="table-container">
+                    <table id="candidateTable">
+                        <thead>
+                            <tr>
+                                <th>Candidate Profile</th>
+                                <th>Applied Role</th>
+                                <th>Match Score</th>
+                                <th>AI XAI</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-candidates" class="view-section hidden fade-in">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Candidate Pool Database</h1>
+                    <p>Search and filter all 3,245 applicants.</p>
+                </div>
+            </header>
+            
+            <div class="filter-bar">
+                <input type="text" placeholder="Search by name, skills, or role..." class="search-input">
+                <select class="filter-select"><option>All Roles</option><option>AI Engineer</option><option>Data Scientist</option></select>
+                <select class="filter-select"><option>Status: All</option><option>New</option><option>Shortlisted</option></select>
+                <button class="btn-primary" style="padding: 10px 20px;">Filter</button>
             </div>
-            <div class="metric-card highlight-card">
-                <div class="metric-icon green-icon">⭐</div>
-                <div>
-                    <h3>System Shortlisted</h3>
-                    <p class="number">142</p>
+
+            <section class="candidate-section">
+                <table class="full-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Experience</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Jason Lee</strong></td><td>Frontend Developer</td><td>4 Years</td><td><span class="status-pill status-new">New</span></td></tr>
+                        <tr><td><strong>Sarah Ahmad</strong></td><td>AI Engineer</td><td>2 Years</td><td><span class="status-pill status-review">In Review</span></td></tr>
+                        <tr><td><strong>Laila</strong></td><td>Lead AI Engineer</td><td>6 Years</td><td><span class="status-pill status-shortlist">Shortlisted</span></td></tr>
+                        <tr><td><strong>Michael Tan</strong></td><td>Data Scientist</td><td>1 Year</td><td><span class="status-pill status-rejected">Rejected</span></td></tr>
+                        <tr><td><strong>Faris</strong></td><td>Drone Data Scientist</td><td>5 Years</td><td><span class="status-pill status-shortlist">Shortlisted</span></td></tr>
+                        <tr><td><strong>Priya Sharma</strong></td><td>UI/UX Designer</td><td>3 Years</td><td><span class="status-pill status-review">In Review</span></td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <div id="view-interviews" class="view-section hidden fade-in">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>Interview Schedules</h1>
+                    <p>Manage upcoming automated Teams/Meet sessions.</p>
+                </div>
+            </header>
+            
+            <div class="calendar-grid">
+                <div class="schedule-card">
+                    <div class="date-badge">Today</div>
+                    <div class="time">10:00 AM - 11:00 AM</div>
+                    <div class="details">
+                        <h4>Laila</h4>
+                        <p>Lead AI Engineer - Technical Round</p>
+                        <p class="interviewer">Interviewer: Dr. Kazim</p>
+                    </div>
+                    <button class="btn-action teams-btn">Join Teams Meeting</button>
+                </div>
+
+                <div class="schedule-card">
+                    <div class="date-badge">Today</div>
+                    <div class="time">02:30 PM - 03:30 PM</div>
+                    <div class="details">
+                        <h4>Faris</h4>
+                        <p>Drone Data Scientist - Cultural Fit</p>
+                        <p class="interviewer">Interviewer: HR Team</p>
+                    </div>
+                    <button class="btn-action teams-btn">Join Teams Meeting</button>
+                </div>
+
+                <div class="schedule-card">
+                    <div class="date-badge" style="background: var(--surface-hover);">Tomorrow</div>
+                    <div class="time">11:00 AM - 12:00 PM</div>
+                    <div class="details">
+                        <h4>Naeim</h4>
+                        <p>CV Specialist - Technical Round</p>
+                        <p class="interviewer">Interviewer: Eng. Sulthan</p>
+                    </div>
+                    <button class="btn-action teams-btn" disabled style="opacity: 0.5;">Link Pending</button>
                 </div>
             </div>
         </div>
 
-        <section class="candidate-section slide-up delay-1">
-            <div class="section-header">
-                <h2>Top Recommended Candidates</h2>
-                <span class="badge">Live Updating</span>
+        <div id="view-analytics" class="view-section hidden fade-in">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>HR Analytics & Reports</h1>
+                    <p>Time-to-hire metrics and pipeline conversion.</p>
+                </div>
+            </header>
+            
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3>Pipeline Conversion Rate</h3>
+                    <div class="funnel">
+                        <div class="funnel-step" style="width: 100%;">Applied (3,245)</div>
+                        <div class="funnel-step" style="width: 80%;">AI Screened (3,180)</div>
+                        <div class="funnel-step" style="width: 30%;">Shortlisted (142)</div>
+                        <div class="funnel-step" style="width: 10%;">Interviewed (24)</div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Time-to-Hire Trend (Days)</h3>
+                    <div class="bar-chart">
+                        <div class="bar-group"><div class="bar" style="height: 80%;"></div><span>Jan</span></div>
+                        <div class="bar-group"><div class="bar" style="height: 75%;"></div><span>Feb</span></div>
+                        <div class="bar-group"><div class="bar" style="height: 60%;"></div><span>Mar</span></div>
+                        <div class="bar-group"><div class="bar" style="height: 45%; background: var(--success);"></div><span>Apr (AI)</span></div>
+                    </div>
+                    <p style="margin-top: 15px; color: var(--success); font-size: 13px;">↓ 40% reduction after AI deployment</p>
+                </div>
             </div>
-            <div class="table-container">
-                <table id="candidateTable">
-                    <thead>
-                        <tr>
-                            <th>Candidate Profile</th>
-                            <th>Applied Role</th>
-                            <th>Match Score</th>
-                            <th>AI XAI</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
-        </section>
+        </div>
+
     </main>
 
     <div id="xaiModal" class="modal hidden">

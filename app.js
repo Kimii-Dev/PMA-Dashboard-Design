@@ -8,22 +8,31 @@ function showToast(message) {
     }
 }
 
-// --- Sidebar Navigation Logic ---
+// --- Sidebar Navigation Logic (Switches Views visually) ---
 const navLinks = document.querySelectorAll('.nav-menu a');
+const views = document.querySelectorAll('.view-section');
+
 if (navLinks.length > 0) {
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault(); // Stop the page from jumping to the top
+            e.preventDefault(); 
             
-            // Remove 'active' class from all links
+            // 1. Manage Active State on Sidebar Buttons
             navLinks.forEach(nav => nav.classList.remove('active'));
-            
-            // Add 'active' class to the clicked link
             this.classList.add('active');
             
-            // Show a notification simulating a page change
-            const sectionName = this.innerText.trim();
-            showToast(`Loading ${sectionName} view...`);
+            // 2. Hide all views, then show the target view
+            const targetId = this.getAttribute('data-target');
+            views.forEach(view => {
+                view.classList.add('hidden');
+                view.classList.remove('active');
+            });
+            
+            const targetView = document.getElementById(targetId);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                targetView.classList.add('active');
+            }
         });
     });
 }
@@ -40,7 +49,7 @@ if (loginForm) {
     });
 }
 
-// --- Dashboard Data & Interaction ---
+// --- Dashboard Data & Candidate Table ---
 const candidates = [
     { name: 'Laila', role: 'Lead AI Engineer', score: 98.5, skills: ['Python', 'TensorFlow', 'PyTorch', 'System Arch'], context: 'High relevance. Experience leading teams matches Aerodyne project demands perfectly.', retention: 92 },
     { name: 'Faris', role: 'Drone Data Scientist', score: 96.2, skills: ['Data Analytics', 'Computer Vision', 'R', 'Tableau'], context: 'Strong technical background in visual data processing. Perfect fit for drone analytics.', retention: 88 },
@@ -52,13 +61,11 @@ const candidates = [
 const candidateTable = document.querySelector('#candidateTable tbody');
 
 if (candidateTable) {
-    // Render Table
+    // Render Table Rows
     candidates.forEach((cand, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>
-                <span class="cand-name">${cand.name}</span>
-            </td>
+            <td><span class="cand-name">${cand.name}</span></td>
             <td>${cand.role}</td>
             <td><span class="score-pill">${cand.score}% Match</span></td>
             <td><button class="btn-xai" data-index="${index}">View Logic</button></td>
@@ -67,7 +74,7 @@ if (candidateTable) {
         candidateTable.appendChild(row);
     });
 
-    // Schedule Buttons Toggle
+    // Handle "Schedule Interview" Button Toggle
     document.querySelectorAll('.schedule-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             if (this.classList.contains('invited')) {
@@ -82,7 +89,7 @@ if (candidateTable) {
         });
     });
 
-    // XAI Modal Logic
+    // Handle XAI Explainability Modal
     const xaiModal = document.getElementById('xaiModal');
     const closeXaiBtn = document.getElementById('closeXaiBtn');
     
@@ -93,18 +100,18 @@ if (candidateTable) {
             document.getElementById('xaiName').innerText = `AI Analysis: ${cand.name}`;
             document.getElementById('xaiScoreText').innerText = `${cand.score}%`;
             
-            // Animate SVG Circle
+            // Animate SVG Circle Score
             setTimeout(() => {
                 document.getElementById('xaiSvgScore').setAttribute('stroke-dasharray', `${cand.score}, 100`);
             }, 100);
 
-            // Populate Tags
+            // Populate Skills Tags
             document.getElementById('xaiSkills').innerHTML = cand.skills.map(skill => `<span class="tag">${skill}</span>`).join('');
             
-            // Populate Context
+            // Populate Context Text
             document.getElementById('xaiContext').innerText = cand.context;
             
-            // Animate Retention Bar
+            // Animate Retention Progress Bar
             const retentionBar = document.getElementById('xaiRetention');
             retentionBar.style.width = '0%'; 
             setTimeout(() => { retentionBar.style.width = `${cand.retention}%`; }, 300);
@@ -113,9 +120,10 @@ if (candidateTable) {
         });
     });
 
+    // Close XAI Modal
     closeXaiBtn.addEventListener('click', () => {
         xaiModal.classList.add('hidden');
-        document.getElementById('xaiSvgScore').setAttribute('stroke-dasharray', `0, 100`); // Reset circle
+        document.getElementById('xaiSvgScore').setAttribute('stroke-dasharray', `0, 100`); // Reset circle stroke
     });
 }
 
@@ -125,6 +133,7 @@ if (uploadBtn) {
     uploadBtn.addEventListener('click', () => {
         uploadBtn.innerText = 'Processing...';
         uploadBtn.style.opacity = '0.7';
+        uploadBtn.style.pointerEvents = 'none'; 
         
         setTimeout(() => { showToast("NLP Extracting Resumes..."); }, 500);
         setTimeout(() => { showToast("LSTM Analyzing Context..."); }, 2000);
@@ -132,6 +141,7 @@ if (uploadBtn) {
             showToast("Success: Database Updated!");
             uploadBtn.innerHTML = '+ Upload Resumes';
             uploadBtn.style.opacity = '1';
+            uploadBtn.style.pointerEvents = 'auto';
         }, 3500);
     });
 }
