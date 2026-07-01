@@ -8,6 +8,26 @@ function showToast(message) {
     }
 }
 
+// --- Sidebar Navigation Logic ---
+const navLinks = document.querySelectorAll('.nav-menu a');
+if (navLinks.length > 0) {
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Stop the page from jumping to the top
+            
+            // Remove 'active' class from all links
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            
+            // Add 'active' class to the clicked link
+            this.classList.add('active');
+            
+            // Show a notification simulating a page change
+            const sectionName = this.innerText.trim();
+            showToast(`Loading ${sectionName} view...`);
+        });
+    });
+}
+
 // --- Login Handling ---
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
